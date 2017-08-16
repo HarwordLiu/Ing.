@@ -15,6 +15,8 @@
 		C5024F6F1F3EF2140002F5DB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C5024F6D1F3EF2140002F5DB /* LaunchScreen.storyboard */; };
 		C5024F791F3EF2290002F5DB /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5024F781F3EF2290002F5DB /* CloudKit.framework */; };
 		C5024F8A1F3EF81C0002F5DB /* HLCoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5024F891F3EF81C0002F5DB /* HLCoreDataManager.swift */; };
+		C51078661F4420C900534DCB /* Task+CloudKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51078651F4420C900534DCB /* Task+CloudKit.swift */; };
+		C51078681F4422F000534DCB /* TaskType+CloudKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51078671F4422F000534DCB /* TaskType+CloudKit.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +31,8 @@
 		C5024F761F3EF2240002F5DB /* Ing.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Ing.entitlements; sourceTree = "<group>"; };
 		C5024F781F3EF2290002F5DB /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		C5024F891F3EF81C0002F5DB /* HLCoreDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HLCoreDataManager.swift; sourceTree = "<group>"; };
+		C51078651F4420C900534DCB /* Task+CloudKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Task+CloudKit.swift"; sourceTree = "<group>"; };
+		C51078671F4422F000534DCB /* TaskType+CloudKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TaskType+CloudKit.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +67,7 @@
 		C5024F601F3EF2140002F5DB /* Ing */ = {
 			isa = PBXGroup;
 			children = (
+				C51078641F441FB500534DCB /* CoreDataModel */,
 				C5024F881F3EF8060002F5DB /* Manager */,
 				C5024F761F3EF2240002F5DB /* Ing.entitlements */,
 				C5024F611F3EF2140002F5DB /* AppDelegate.swift */,
@@ -90,6 +95,15 @@
 				C5024F891F3EF81C0002F5DB /* HLCoreDataManager.swift */,
 			);
 			path = Manager;
+			sourceTree = "<group>";
+		};
+		C51078641F441FB500534DCB /* CoreDataModel */ = {
+			isa = PBXGroup;
+			children = (
+				C51078651F4420C900534DCB /* Task+CloudKit.swift */,
+				C51078671F4422F000534DCB /* TaskType+CloudKit.swift */,
+			);
+			path = CoreDataModel;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -173,8 +187,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C51078661F4420C900534DCB /* Task+CloudKit.swift in Sources */,
 				C5024F8A1F3EF81C0002F5DB /* HLCoreDataManager.swift in Sources */,
 				C5024F641F3EF2140002F5DB /* ViewController.swift in Sources */,
+				C51078681F4422F000534DCB /* TaskType+CloudKit.swift in Sources */,
 				C5024F6A1F3EF2140002F5DB /* Ing.xcdatamodeld in Sources */,
 				C5024F621F3EF2140002F5DB /* AppDelegate.swift in Sources */,
 			);
@@ -349,6 +365,7 @@
 				C5024F751F3EF2140002F5DB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
