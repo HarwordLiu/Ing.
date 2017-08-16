@@ -7,16 +7,25 @@
 //
 
 import UIKit
-import CloudKit
+import CoreData
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, CoreDataManagerViewDelegate, NSFetchedResultsControllerDelegate {
+    
+    var coreDataManager: HLCoreDataManager? {
+        didSet {
+            if isViewLoaded {
+                //
+            }
+        }
+    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         
     }
-
+    
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

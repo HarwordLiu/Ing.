@@ -17,6 +17,8 @@
 		C5024F8A1F3EF81C0002F5DB /* HLCoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5024F891F3EF81C0002F5DB /* HLCoreDataManager.swift */; };
 		C51078661F4420C900534DCB /* Task+CloudKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51078651F4420C900534DCB /* Task+CloudKit.swift */; };
 		C51078681F4422F000534DCB /* TaskType+CloudKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51078671F4422F000534DCB /* TaskType+CloudKit.swift */; };
+		C5E706FB1F4441E900693500 /* HLCloudKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E706FA1F4441E900693500 /* HLCloudKitManager.swift */; };
+		C5E707001F44493F00693500 /* CoreDataProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E706FF1F44493F00693500 /* CoreDataProtocols.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +35,8 @@
 		C5024F891F3EF81C0002F5DB /* HLCoreDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HLCoreDataManager.swift; sourceTree = "<group>"; };
 		C51078651F4420C900534DCB /* Task+CloudKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Task+CloudKit.swift"; sourceTree = "<group>"; };
 		C51078671F4422F000534DCB /* TaskType+CloudKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TaskType+CloudKit.swift"; sourceTree = "<group>"; };
+		C5E706FA1F4441E900693500 /* HLCloudKitManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HLCloudKitManager.swift; sourceTree = "<group>"; };
+		C5E706FF1F44493F00693500 /* CoreDataProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataProtocols.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +71,7 @@
 		C5024F601F3EF2140002F5DB /* Ing */ = {
 			isa = PBXGroup;
 			children = (
+				C5E706FC1F44476B00693500 /* Protocol */,
 				C51078641F441FB500534DCB /* CoreDataModel */,
 				C5024F881F3EF8060002F5DB /* Manager */,
 				C5024F761F3EF2240002F5DB /* Ing.entitlements */,
@@ -93,6 +98,7 @@
 			isa = PBXGroup;
 			children = (
 				C5024F891F3EF81C0002F5DB /* HLCoreDataManager.swift */,
+				C5E706FA1F4441E900693500 /* HLCloudKitManager.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -104,6 +110,14 @@
 				C51078671F4422F000534DCB /* TaskType+CloudKit.swift */,
 			);
 			path = CoreDataModel;
+			sourceTree = "<group>";
+		};
+		C5E706FC1F44476B00693500 /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				C5E706FF1F44493F00693500 /* CoreDataProtocols.swift */,
+			);
+			path = Protocol;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -189,7 +203,9 @@
 			files = (
 				C51078661F4420C900534DCB /* Task+CloudKit.swift in Sources */,
 				C5024F8A1F3EF81C0002F5DB /* HLCoreDataManager.swift in Sources */,
+				C5E707001F44493F00693500 /* CoreDataProtocols.swift in Sources */,
 				C5024F641F3EF2140002F5DB /* ViewController.swift in Sources */,
+				C5E706FB1F4441E900693500 /* HLCloudKitManager.swift in Sources */,
 				C51078681F4422F000534DCB /* TaskType+CloudKit.swift in Sources */,
 				C5024F6A1F3EF2140002F5DB /* Ing.xcdatamodeld in Sources */,
 				C5024F621F3EF2140002F5DB /* AppDelegate.swift in Sources */,
