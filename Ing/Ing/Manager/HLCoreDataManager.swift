@@ -18,7 +18,7 @@ class HLCoreDataManager: NSObject {
     fileprivate var coordinator: NSPersistentStoreCoordinator
     
     init(closure:@escaping ()->()) {
-        guard let modelURL = Bundle.main.url(forResource: "CoreDataModel", withExtension: "momd"),
+        guard let modelURL = Bundle.main.url(forResource: "Ing", withExtension: "momd"),
             let managedObjectModel = NSManagedObjectModel.init(contentsOf: modelURL)
             else {
                 fatalError("CoreDataManager - COULD NOT INIT MANAGED OBJECT MODEL")
@@ -111,7 +111,30 @@ class HLCoreDataManager: NSObject {
     }
     
     
-    
+    func save() {
+//        let insertedObjects = mainThreadManagedObjectContext.insertedObjects
+//        let modifiedObjects = mainThreadManagedObjectContext.updatedObjects
+        
+//        let deletedRecordIDs = mainThreadManagedObjectContext.deletedObjects
+        
+        if privateObjectContext.hasChanges || mainThreadManagedObjectContext.hasChanges {
+            self.mainThreadManagedObjectContext.performAndWait {
+                [unowned self] in
+                
+                do {
+                    try self.mainThreadManagedObjectContext.save()
+                    self.savePrivateObjectContext()
+                }
+                catch let error as NSError {
+                    fatalError("CoreDataManager - SAVE MANAGEDOBJECTCONTEXT FAILED: \(error.localizedDescription)")
+                }
+                
+//                let insertedManagedObjectIDs = insertedObjects.flatMap { $0.objectID }
+//                let modifiedManagedObjectIDs = modifiedObjects.flatMap { $0.objectID }
+                
+            }
+        }
+    }
     
     
     

@@ -13,9 +13,15 @@ import CoreData
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
+    var coreDataManager: HLCoreDataManager?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        
+        coreDataManager = HLCoreDataManager() {
+            [unowned self] in
+            
+            self.setCoreDataManagerInViews()
+        }
     
         return true
     }
@@ -41,7 +47,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         // Saves changes in the application's managed object context before the application terminates.
-        self.saveContext()
+//        self.saveContext()
+    }
+    
+    func setCoreDataManagerInViews() {
+        
+        guard let safeCoreDataManager = coreDataManager else {
+            fatalError("CoreDataManager expected to be set")
+        }
+        
+        let navigationController = window?.rootViewController as! UINavigationController
+        
+        if var rootVC: CoreDataManagerViewDelegate = navigationController.viewControllers[0] as? CoreDataManagerViewDelegate {
+            rootVC.coreDataManager = safeCoreDataManager
+        }
     }
 
     // MARK: - Core Data stack
