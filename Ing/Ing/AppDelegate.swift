@@ -22,6 +22,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             self.setCoreDataManagerInViews()
         }
+        
+        
     
         return true
     }

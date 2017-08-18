@@ -45,7 +45,8 @@ class HLCoreDataManager: NSObject {
             
             let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last
             let storeURL = URL.init(string: "coredatamodel.sqlite", relativeTo: documentsURL)
-            
+            print("\(String(describing: documentsURL))")
+
             do {
                 try self.coordinator.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: storeURL, options: options)
                 
@@ -136,7 +137,20 @@ class HLCoreDataManager: NSObject {
         }
     }
     
-    
+    func configureFetchedResultsController(entityName: String, sortKey: String, delegate: Any) -> NSFetchedResultsController<NSFetchRequestResult> {
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
+        let nameSortDescriptor = NSSortDescriptor(key: sortKey, ascending: true)
+        fetchRequest.sortDescriptors = [nameSortDescriptor]
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.mainThreadManagedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
+        fetchedResultsController.delegate = delegate as? NSFetchedResultsControllerDelegate
+        do {
+            try fetchedResultsController.performFetch()
+        }
+        catch let error as NSError {
+            fatalError("ObjectTableViewController - configureFetchedResultsController: fetch failed \(error.localizedDescription)")
+        }
+        return fetchedResultsController
+    }
     
     
     

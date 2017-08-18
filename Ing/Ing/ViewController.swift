@@ -33,7 +33,8 @@ class ViewController: UIViewController, CoreDataManagerViewDelegate, NSFetchedRe
         saveObject()
     }
     @IBAction func clickFetchBtn(_ sender: UIButton) {
-        configureFetchedResultsController()
+//        configureFetchedResultsController()
+        fetchedResultsController = coreDataManager?.configureFetchedResultsController(entityName: "Task", sortKey: "taskName", delegate: self);
     }
     @IBAction func clickLogBtn(_ sender: UIButton) {
         for object in (fetchedResultsController?.fetchedObjects)! {
