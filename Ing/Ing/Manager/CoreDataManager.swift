@@ -12,17 +12,20 @@ import CloudKit
 
 typealias networkOperationResult = (_ success: Bool, _ errorMessage: String?) -> Void
 
-class HLCoreDataManager: NSObject {
+class CoreDataManager: NSObject {
     var mainThreadManagedObjectContext: NSManagedObjectContext
+    var cloudKitManager: CloudKitManager?
     fileprivate var privateObjectContext: NSManagedObjectContext
-    fileprivate var coordinator: NSPersistentStoreCoordinator
+    fileprivate let coordinator: NSPersistentStoreCoordinator
     
     init(closure:@escaping ()->()) {
-        guard let modelURL = Bundle.main.url(forResource: "Ing", withExtension: "momd"),
+        
+        guard let modelURL = Bundle.main.url(forResource: "CoreDataModel", withExtension: "momd"),
             let managedObjectModel = NSManagedObjectModel.init(contentsOf: modelURL)
             else {
                 fatalError("CoreDataManager - COULD NOT INIT MANAGED OBJECT MODEL")
         }
+        
         coordinator = NSPersistentStoreCoordinator.init(managedObjectModel: managedObjectModel)
         
         mainThreadManagedObjectContext = NSManagedObjectContext.init(concurrencyType: NSManagedObjectContextConcurrencyType.mainQueueConcurrencyType)
@@ -33,7 +36,6 @@ class HLCoreDataManager: NSObject {
         
         super.init()
         
-        // 异步
         DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async {
             [unowned self] in
             
@@ -41,12 +43,11 @@ class HLCoreDataManager: NSObject {
                 NSMigratePersistentStoresAutomaticallyOption: true,
                 NSInferMappingModelAutomaticallyOption: true,
                 NSSQLitePragmasOption: ["journal_mode": "DELETE"]
-            ] as [String : Any]
+                ] as [String : Any]
             
             let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last
             let storeURL = URL.init(string: "coredatamodel.sqlite", relativeTo: documentsURL)
-            print("\(String(describing: documentsURL))")
-
+            
             do {
                 try self.coordinator.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: storeURL, options: options)
                 
@@ -57,19 +58,21 @@ class HLCoreDataManager: NSObject {
             catch let error as NSError {
                 fatalError("CoreDataManager - COULD NOT INIT SQLITE STORE: \(error.localizedDescription)")
             }
-
         }
         
-        NotificationCenter.default.addObserver(self, selector: #selector(mergeContext(_:)), name:NSNotification.Name.NSManagedObjectContextDidSave , object: nil)
+        cloudKitManager = CloudKitManager(coreDataManager: self)
         
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(CoreDataManager.mergeContext(_:)), name:NSNotification.Name.NSManagedObjectContextDidSave , object: nil)
     }
     
     func mergeContext(_ notification: Notification) {
+        
         let sender = notification.object as! NSManagedObjectContext
+        
         if sender != mainThreadManagedObjectContext {
             mainThreadManagedObjectContext.performAndWait {
                 [unowned self] in
+                
                 print("mainThreadManagedObjectContext.mergeChangesFromContextDidSaveNotification")
                 self.mainThreadManagedObjectContext.mergeChanges(fromContextDidSave: notification)
             }
@@ -84,6 +87,33 @@ class HLCoreDataManager: NSObject {
         return backgroundManagedObjectContext
     }
     
+    func save() {
+        
+        let insertedObjects = mainThreadManagedObjectContext.insertedObjects
+        let modifiedObjects = mainThreadManagedObjectContext.updatedObjects
+        let deletedRecordIDs = mainThreadManagedObjectContext.deletedObjects.flatMap { ($0 as? CloudKitManagedObject)?.cloudKitRecordID() }
+        
+        if privateObjectContext.hasChanges || mainThreadManagedObjectContext.hasChanges {
+            
+            self.mainThreadManagedObjectContext.performAndWait {
+                [unowned self] in
+                
+                do {
+                    try self.mainThreadManagedObjectContext.save()
+                    self.savePrivateObjectContext()
+                }
+                catch let error as NSError {
+                    fatalError("CoreDataManager - SAVE MANAGEDOBJECTCONTEXT FAILED: \(error.localizedDescription)")
+                }
+                
+                let insertedManagedObjectIDs = insertedObjects.flatMap { $0.objectID }
+                let modifiedManagedObjectIDs = modifiedObjects.flatMap { $0.objectID }
+                
+                self.cloudKitManager?.saveChangesToCloudKit(insertedManagedObjectIDs, modifiedManagedObjectIDs: modifiedManagedObjectIDs, deletedRecordIDs: deletedRecordIDs)
+            }
+        }
+    }
+    
     func saveBackgroundManagedObjectContext(_ backgroundManagedObjectContext: NSManagedObjectContext) {
         
         if backgroundManagedObjectContext.hasChanges {
@@ -94,6 +124,10 @@ class HLCoreDataManager: NSObject {
                 fatalError("CoreDataManager - save backgroundManagedObjectContext ERROR: \(error.localizedDescription)")
             }
         }
+    }
+    
+    func sync() {
+        cloudKitManager?.performFullSync()
     }
     
     internal func savePrivateObjectContext() {
@@ -111,51 +145,25 @@ class HLCoreDataManager: NSObject {
         }
     }
     
-    
-    func save() {
-//        let insertedObjects = mainThreadManagedObjectContext.insertedObjects
-//        let modifiedObjects = mainThreadManagedObjectContext.updatedObjects
+    // MARK: Fetch CloudKitManagedObjects from Context by NSManagedObjectID
+    func fetchCloudKitManagedObjects(_ managedObjectContext: NSManagedObjectContext, managedObjectIDs: [NSManagedObjectID]) -> [CloudKitManagedObject] {
         
-//        let deletedRecordIDs = mainThreadManagedObjectContext.deletedObjects
-        
-        if privateObjectContext.hasChanges || mainThreadManagedObjectContext.hasChanges {
-            self.mainThreadManagedObjectContext.performAndWait {
-                [unowned self] in
+        var cloudKitManagedObjects: [CloudKitManagedObject] = []
+        for managedObjectID in managedObjectIDs {
+            do {
+                let managedObject = try managedObjectContext.existingObject(with: managedObjectID)
                 
-                do {
-                    try self.mainThreadManagedObjectContext.save()
-                    self.savePrivateObjectContext()
+                if let cloudKitManagedObject = managedObject as? CloudKitManagedObject {
+                    cloudKitManagedObjects.append(cloudKitManagedObject)
                 }
-                catch let error as NSError {
-                    fatalError("CoreDataManager - SAVE MANAGEDOBJECTCONTEXT FAILED: \(error.localizedDescription)")
-                }
-                
-//                let insertedManagedObjectIDs = insertedObjects.flatMap { $0.objectID }
-//                let modifiedManagedObjectIDs = modifiedObjects.flatMap { $0.objectID }
-                
+            }
+            catch let error as NSError {
+                print("Error fetching from CoreData: \(error.localizedDescription)")
             }
         }
+        
+        return cloudKitManagedObjects
     }
-    
-    func configureFetchedResultsController(entityName: String, sortKey: String, delegate: Any) -> NSFetchedResultsController<NSFetchRequestResult> {
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
-        let nameSortDescriptor = NSSortDescriptor(key: sortKey, ascending: true)
-        fetchRequest.sortDescriptors = [nameSortDescriptor]
-        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.mainThreadManagedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
-        fetchedResultsController.delegate = delegate as? NSFetchedResultsControllerDelegate
-        do {
-            try fetchedResultsController.performFetch()
-        }
-        catch let error as NSError {
-            fatalError("ObjectTableViewController - configureFetchedResultsController: fetch failed \(error.localizedDescription)")
-        }
-        return fetchedResultsController
-    }
-    
-    
-    
-    
-    
     
     
     

@@ -13,11 +13,11 @@ import CoreData
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
-    var coreDataManager: HLCoreDataManager?
+    var coreDataManager: CoreDataManager?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
-        coreDataManager = HLCoreDataManager() {
+        coreDataManager = CoreDataManager() {
             [unowned self] in
             
             self.setCoreDataManagerInViews()
