@@ -17,14 +17,16 @@ class CloudKitManager: NSObject {
     fileprivate let coreDataManager: CoreDataManager
     fileprivate let operationQueue: OperationQueue
     
+    
     // MARK: init
     init(coreDataManager: CoreDataManager) {
         
         self.coreDataManager = coreDataManager
         self.operationQueue = OperationQueue()
         self.operationQueue.maxConcurrentOperationCount = 1
+        self.privateDB = CKContainer.default().privateCloudDatabase
         
-        privateDB = CKContainer.default().privateCloudDatabase
+        super.init()
         
         CKContainer.default().accountStatus {
             [unowned self]
@@ -36,7 +38,9 @@ class CloudKitManager: NSObject {
                 self.handleCloudKitUnavailable(accountStatus, error: error! as NSError)
             }
         }
+        
     }
+    
     
     // MARK: Public Functions
     func saveChangesToCloudKit(_ insertedObjects: [NSManagedObjectID], modifiedManagedObjectIDs: [NSManagedObjectID], deletedRecordIDs: [CKRecordID]) {
@@ -188,25 +192,22 @@ class CloudKitManager: NSObject {
         
         // 1. Fetch all the changes both locally and from each zone
         let fetchOfflineChangesFromCoreDataOperation = FetchOfflineChangesFromCoreDataOperation(coreDataManager: coreDataManager, cloudKitManager: self, entityNames: ModelObjectType.allCloudKitModelObjectTypes)
-        let fetchCarZoneChangesOperation = FetchRecordChangesForCloudKitZoneOperation(cloudKitZone: CloudKitZone.CarZone)
-        let fetchTruckZoneChangesOperation = FetchRecordChangesForCloudKitZoneOperation(cloudKitZone: CloudKitZone.TruckZone)
-        let fetchBusZoneChangesOperation = FetchRecordChangesForCloudKitZoneOperation(cloudKitZone: CloudKitZone.BusZone)
+        let fetchTaskZoneChangesOperation = FetchRecordChangesForCloudKitZoneOperation(cloudKitZone: CloudKitZone.Task)
+        let fetchTaskTypeZoneChangesOperation = FetchRecordChangesForCloudKitZoneOperation(cloudKitZone: CloudKitZone.TaskType)
         
         // 2. Process the changes after transfering
         let processSyncChangesOperation = ProcessSyncChangesOperation(coreDataManager: coreDataManager)
         let transferDataToProcessSyncChangesOperation = BlockOperation {
-            [unowned processSyncChangesOperation, unowned fetchOfflineChangesFromCoreDataOperation, unowned fetchCarZoneChangesOperation, unowned fetchTruckZoneChangesOperation, unowned fetchBusZoneChangesOperation] in
+            [unowned processSyncChangesOperation, unowned fetchOfflineChangesFromCoreDataOperation, unowned fetchTaskZoneChangesOperation, unowned fetchTaskTypeZoneChangesOperation] in
             
             processSyncChangesOperation.preProcessLocalChangedObjectIDs.append(contentsOf: fetchOfflineChangesFromCoreDataOperation.updatedManagedObjects)
             processSyncChangesOperation.preProcessLocalDeletedRecordIDs.append(contentsOf: fetchOfflineChangesFromCoreDataOperation.deletedRecordIDs)
             
-            processSyncChangesOperation.preProcessServerChangedRecords.append(contentsOf: fetchCarZoneChangesOperation.changedRecords)
-            processSyncChangesOperation.preProcessServerChangedRecords.append(contentsOf: fetchTruckZoneChangesOperation.changedRecords)
-            processSyncChangesOperation.preProcessServerChangedRecords.append(contentsOf: fetchBusZoneChangesOperation.changedRecords)
+            processSyncChangesOperation.preProcessServerChangedRecords.append(contentsOf: fetchTaskZoneChangesOperation.changedRecords)
+            processSyncChangesOperation.preProcessServerChangedRecords.append(contentsOf: fetchTaskTypeZoneChangesOperation.changedRecords)
             
-            processSyncChangesOperation.preProcessServerDeletedRecordIDs.append(contentsOf: fetchCarZoneChangesOperation.deletedRecordIDs)
-            processSyncChangesOperation.preProcessServerDeletedRecordIDs.append(contentsOf: fetchTruckZoneChangesOperation.deletedRecordIDs)
-            processSyncChangesOperation.preProcessServerDeletedRecordIDs.append(contentsOf: fetchBusZoneChangesOperation.deletedRecordIDs)
+            processSyncChangesOperation.preProcessServerDeletedRecordIDs.append(contentsOf: fetchTaskZoneChangesOperation.deletedRecordIDs)
+            processSyncChangesOperation.preProcessServerDeletedRecordIDs.append(contentsOf: fetchTaskTypeZoneChangesOperation.deletedRecordIDs)
         }
         
         // 3. Fetch records from the server that we need to change
@@ -246,9 +247,8 @@ class CloudKitManager: NSObject {
         // set dependencies
         // 1. transfering all the fetched data to process for conflicts
         transferDataToProcessSyncChangesOperation.addDependency(fetchOfflineChangesFromCoreDataOperation)
-        transferDataToProcessSyncChangesOperation.addDependency(fetchCarZoneChangesOperation)
-        transferDataToProcessSyncChangesOperation.addDependency(fetchTruckZoneChangesOperation)
-        transferDataToProcessSyncChangesOperation.addDependency(fetchBusZoneChangesOperation)
+        transferDataToProcessSyncChangesOperation.addDependency(fetchTaskZoneChangesOperation)
+        transferDataToProcessSyncChangesOperation.addDependency(fetchTaskTypeZoneChangesOperation)
         
         // 2. processing the data onces its transferred
         processSyncChangesOperation.addDependency(transferDataToProcessSyncChangesOperation)
@@ -270,9 +270,8 @@ class CloudKitManager: NSObject {
         
         // add operations to the queue
         operationQueue.addOperation(fetchOfflineChangesFromCoreDataOperation)
-        operationQueue.addOperation(fetchCarZoneChangesOperation)
-        operationQueue.addOperation(fetchTruckZoneChangesOperation)
-        operationQueue.addOperation(fetchBusZoneChangesOperation)
+        operationQueue.addOperation(fetchTaskZoneChangesOperation)
+        operationQueue.addOperation(fetchTaskTypeZoneChangesOperation)
         operationQueue.addOperation(transferDataToProcessSyncChangesOperation)
         operationQueue.addOperation(processSyncChangesOperation)
         operationQueue.addOperation(transferDataToFetchRecordsOperation)

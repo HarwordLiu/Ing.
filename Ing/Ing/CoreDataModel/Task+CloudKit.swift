@@ -8,6 +8,6 @@
 
 import Foundation
 
-extension Task {
+extension Task: CloudKitRecordIDObject {
     
 }

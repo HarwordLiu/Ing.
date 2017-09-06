@@ -11,7 +11,7 @@ import CloudKit
 import CoreData
 
 @objc protocol CloudKitRecordIDObject {
-    var recordID: Data? { get set }
+    var recordID: NSData? { get set }
 }
 
 extension CloudKitRecordIDObject {
@@ -20,7 +20,7 @@ extension CloudKitRecordIDObject {
             return nil
         }
         
-        return NSKeyedUnarchiver.unarchiveObject(with: recordID) as? CKRecordID
+        return NSKeyedUnarchiver.unarchiveObject(with: recordID as Data) as? CKRecordID
     }
 }
 

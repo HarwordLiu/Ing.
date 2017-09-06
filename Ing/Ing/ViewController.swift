@@ -9,9 +9,9 @@
 import UIKit
 import CoreData
 
-class ViewController: UIViewController, CoreDataManagerViewDelegate, NSFetchedResultsControllerDelegate {
+class ViewController: UIViewController{
     
-    var coreDataManager: HLCoreDataManager?
+    var coreDataManager: CoreDataManager?
     var task: Task?
     var hasObject: Bool = false
     var dateFormatter = DateFormatter()
@@ -23,7 +23,7 @@ class ViewController: UIViewController, CoreDataManagerViewDelegate, NSFetchedRe
         
         dateFormatter.dateStyle = DateFormatter.Style.short
         dateFormatter.timeStyle = DateFormatter.Style.medium
-        
+
         
         
         NotificationCenter.default.addObserver(self, selector: #selector(ViewController.managedObjectContextChanged(_:)), name: NSNotification.Name.NSManagedObjectContextObjectsDidChange, object: coreDataManager?.mainThreadManagedObjectContext)
@@ -34,7 +34,6 @@ class ViewController: UIViewController, CoreDataManagerViewDelegate, NSFetchedRe
     }
     @IBAction func clickFetchBtn(_ sender: UIButton) {
 //        configureFetchedResultsController()
-        fetchedResultsController = coreDataManager?.configureFetchedResultsController(entityName: "Task", sortKey: "taskName", delegate: self);
     }
     @IBAction func clickLogBtn(_ sender: UIButton) {
         for object in (fetchedResultsController?.fetchedObjects)! {
@@ -45,48 +44,9 @@ class ViewController: UIViewController, CoreDataManagerViewDelegate, NSFetchedRe
 //        print("\(task.taskName)")
     }
     
-    func configureFetchedResultsController() {
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Task")
-        let nameSortDescriptor = NSSortDescriptor(key: "taskName", ascending: true)
-        
-        fetchRequest.sortDescriptors = [nameSortDescriptor]
-        
-        if let managedObjectContext = coreDataManager?.mainThreadManagedObjectContext {
-            fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
-        }
-        
-        fetchedResultsController?.delegate = self
-        
-        do {
-            try fetchedResultsController?.performFetch()
-        }
-        catch let error as NSError {
-            fatalError("ObjectTableViewController - configureFetchedResultsController: fetch failed \(error.localizedDescription)")
-        }
-    }
     
     func saveObject() {
         view.endEditing(true)
-        guard let managerObjectCotext = coreDataManager?.mainThreadManagedObjectContext else {
-            fatalError("ViewController - saveObject: guard statement failed for either no managedObjectContext or invalid input")
-        }
-        
-        guard let managerTaskObject = NSEntityDescription.insertNewObject(forEntityName: "Task", into: managerObjectCotext) as? Task else {
-            fatalError("ViewController - saveProject : could not create Task object")
-        }
-        
-        guard let managerTaskTypeObject = NSEntityDescription.insertNewObject(forEntityName: "TaskType", into: managerObjectCotext) as? TaskType else {
-            fatalError("ViewController - saveProject : could not create TaskType object")
-        }
-        
-        managerTaskTypeObject.id = 1;
-        managerTaskTypeObject.name = "啦啦啦";
-        
-        managerTaskObject.taskName = "干活"
-        managerTaskObject.duration = 20
-        managerTaskObject.taskType = managerTaskTypeObject;
-        
-        coreDataManager?.save()
     }
     
     func managedObjectContextChanged(_ notification: Notification) {

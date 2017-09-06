@@ -41,17 +41,17 @@ class SaveChangedRecordsToCoreDataOperation: Operation {
             [unowned self] in
             
             // loop through changed records and filter our child records
-            for record in self.changedRecords {
-                if let modelObjecType = ModelObjectType(rawValue: record.recordType) {
-                    
-                    if modelObjecType == ModelObjectType.Note {
-                        self.noteRecords.append(record)
-                    }
-                    else {
-                        self.rootRecords.append(record)
-                    }
-                }
-            }
+//            for record in self.changedRecords {
+//                if let modelObjecType = ModelObjectType(rawValue: record.recordType) {
+//                    
+//                    if modelObjecType == ModelObjectType.Note {
+//                        self.noteRecords.append(record)
+//                    }
+//                    else {
+//                        self.rootRecords.append(record)
+//                    }
+//                }
+//            }
             
             // loop through all the changed root records first and insert or update them in core data
             for record in self.rootRecords {

@@ -10,15 +10,13 @@ import UIKit
 import CloudKit
 
 enum CloudKitZone: String {
-    case CarZone = "CarZone"
-    case TruckZone = "TruckZone"
-    case BusZone = "BusZone"
+    case Task = "Task"
+    case TaskType = "TaskType"
     
     init?(recordType: String) {
         switch recordType {
-        case ModelObjectType.Car.rawValue : self = .CarZone
-        case ModelObjectType.Truck.rawValue : self = .TruckZone
-        case ModelObjectType.Bus.rawValue : self = .BusZone
+        case ModelObjectType.Task.rawValue : self = .Task
+        case ModelObjectType.TaskType.rawValue : self = .TaskType
         default : return nil
         }
     }
@@ -33,9 +31,8 @@ enum CloudKitZone: String {
     
     func recordType() -> String {
         switch self {
-        case .CarZone : return ModelObjectType.Car.rawValue
-        case .TruckZone : return ModelObjectType.Truck.rawValue
-        case .BusZone : return ModelObjectType.Bus.rawValue
+        case .Task : return ModelObjectType.Task.rawValue
+        case .TaskType : return ModelObjectType.TaskType.rawValue
         }
     }
     
@@ -58,9 +55,8 @@ enum CloudKitZone: String {
     }
     
     static let allCloudKitZoneNames = [
-        CloudKitZone.CarZone.rawValue,
-        CloudKitZone.TruckZone.rawValue,
-        CloudKitZone.BusZone.rawValue
+        CloudKitZone.Task.rawValue,
+        CloudKitZone.TaskType.rawValue
     ]
 }
 
