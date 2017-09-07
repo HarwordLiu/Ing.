@@ -8,24 +8,31 @@
 
 import UIKit
 import CoreData
+import CloudKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
     var coreDataManager: CoreDataManager?
+    var cloudKitManager: CloudKitManager?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
         coreDataManager = CoreDataManager() {
             [unowned self] in
             
-//            self.setCoreDataManagerInViews()
+            self.setCoreDataManagerInViews()
+            self.cloudKitManager = self.coreDataManager?.cloudKitManager
         }
         
         
     
         return true
+    }
+    
+    func setCoreDataManagerInViews() {
+        
     }
 
     func applicationWillResignActive(_ application: UIApplication) {

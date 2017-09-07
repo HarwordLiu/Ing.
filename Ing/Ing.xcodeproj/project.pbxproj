@@ -18,6 +18,7 @@
 		C51078661F4420C900534DCB /* Task+CloudKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51078651F4420C900534DCB /* Task+CloudKit.swift */; };
 		C51078681F4422F000534DCB /* TaskType+CloudKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51078671F4422F000534DCB /* TaskType+CloudKit.swift */; };
 		C51AE7631F5E9D2700297968 /* DeletedCloudKitObject+CloudKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51AE7621F5E9D2700297968 /* DeletedCloudKitObject+CloudKit.swift */; };
+		C56A1E251F60E5BB004DAC99 /* CloudKitProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56A1E241F60E5BB004DAC99 /* CloudKitProtocols.swift */; };
 		C59ACEDA1F5E866300F02076 /* FetchRecordChangesForCloudKitZoneOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59ACECA1F5E866300F02076 /* FetchRecordChangesForCloudKitZoneOperation.swift */; };
 		C59ACEDB1F5E866300F02076 /* FetchRecordsForModifiedObjectsOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59ACECB1F5E866300F02076 /* FetchRecordsForModifiedObjectsOperation.swift */; };
 		C59ACEDC1F5E866300F02076 /* ModifyRecordsFromManagedObjectsOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59ACECC1F5E866300F02076 /* ModifyRecordsFromManagedObjectsOperation.swift */; };
@@ -51,6 +52,7 @@
 		C51078651F4420C900534DCB /* Task+CloudKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Task+CloudKit.swift"; sourceTree = "<group>"; };
 		C51078671F4422F000534DCB /* TaskType+CloudKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TaskType+CloudKit.swift"; sourceTree = "<group>"; };
 		C51AE7621F5E9D2700297968 /* DeletedCloudKitObject+CloudKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DeletedCloudKitObject+CloudKit.swift"; sourceTree = "<group>"; };
+		C56A1E241F60E5BB004DAC99 /* CloudKitProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudKitProtocols.swift; sourceTree = "<group>"; };
 		C59ACECA1F5E866300F02076 /* FetchRecordChangesForCloudKitZoneOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchRecordChangesForCloudKitZoneOperation.swift; sourceTree = "<group>"; };
 		C59ACECB1F5E866300F02076 /* FetchRecordsForModifiedObjectsOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchRecordsForModifiedObjectsOperation.swift; sourceTree = "<group>"; };
 		C59ACECC1F5E866300F02076 /* ModifyRecordsFromManagedObjectsOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModifyRecordsFromManagedObjectsOperation.swift; sourceTree = "<group>"; };
@@ -217,6 +219,7 @@
 			isa = PBXGroup;
 			children = (
 				C5E706FF1F44493F00693500 /* CoreDataProtocols.swift */,
+				C56A1E241F60E5BB004DAC99 /* CloudKitProtocols.swift */,
 			);
 			path = Protocol;
 			sourceTree = "<group>";
@@ -324,6 +327,7 @@
 				C5024F6A1F3EF2140002F5DB /* Ing.xcdatamodeld in Sources */,
 				C59ACEE11F5E866300F02076 /* ClearDeletedCloudKitObjectsOperation.swift in Sources */,
 				C59ACEE01F5E866300F02076 /* ProcessServerRecordZonesOperation.swift in Sources */,
+				C56A1E251F60E5BB004DAC99 /* CloudKitProtocols.swift in Sources */,
 				C5024F621F3EF2140002F5DB /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
