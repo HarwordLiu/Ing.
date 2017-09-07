@@ -32,7 +32,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func setCoreDataManagerInViews() {
+        guard let safeCoreDataManager = coreDataManager else {
+            fatalError("CoreDataManager expected to be set")
+        }
         
+        let tabBarController = window?.rootViewController as! UITabBarController
+        let tabBarViewControllers = tabBarController.viewControllers!
+        
+        for viewController in tabBarViewControllers {
+            
+            switch viewController {
+                
+            case let navigationController as UINavigationController:
+                if var rootViewController: CoreDataManagerViewController = navigationController.viewControllers[0] as? CoreDataManagerViewController {
+                    rootViewController.coreDataManager = safeCoreDataManager
+                }
+            default: ()
+            }
+        }
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
