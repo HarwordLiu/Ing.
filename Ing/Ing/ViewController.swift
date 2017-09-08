@@ -9,9 +9,10 @@
 import UIKit
 import CoreData
 
-class ViewController: UIViewController{
+class ViewController: UIViewController, CoreDataManagerViewController {
     
     var coreDataManager: CoreDataManager?
+    var modelObjectType: ModelObjectType?
     var task: Task?
     var hasObject: Bool = false
     var dateFormatter = DateFormatter()
@@ -24,7 +25,6 @@ class ViewController: UIViewController{
         
         dateFormatter.dateStyle = DateFormatter.Style.short
         dateFormatter.timeStyle = DateFormatter.Style.medium
-
         
         
         NotificationCenter.default.addObserver(self, selector: #selector(ViewController.managedObjectContextChanged(_:)), name: NSNotification.Name.NSManagedObjectContextObjectsDidChange, object: coreDataManager?.mainThreadManagedObjectContext)
