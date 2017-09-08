@@ -36,20 +36,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             fatalError("CoreDataManager expected to be set")
         }
         
-        let tabBarController = window?.rootViewController as! UITabBarController
-        let tabBarViewControllers = tabBarController.viewControllers!
+        let navRootVC = window?.rootViewController as! UINavigationController
+        var rootVC: CoreDataManagerViewController = navRootVC.viewControllers[0] as! CoreDataManagerViewController
+        rootVC.coreDataManager = safeCoreDataManager;
         
-        for viewController in tabBarViewControllers {
-            
-            switch viewController {
-                
-            case let navigationController as UINavigationController:
-                if var rootViewController: CoreDataManagerViewController = navigationController.viewControllers[0] as? CoreDataManagerViewController {
-                    rootViewController.coreDataManager = safeCoreDataManager
-                }
-            default: ()
-            }
-        }
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
