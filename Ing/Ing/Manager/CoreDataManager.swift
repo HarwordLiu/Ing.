@@ -20,7 +20,7 @@ class CoreDataManager: NSObject {
     
     init(closure:@escaping ()->()) {
         
-        guard let modelURL = Bundle.main.url(forResource: "CoreDataModel", withExtension: "momd"),
+        guard let modelURL = Bundle.main.url(forResource: "Ing", withExtension: "momd"),
             let managedObjectModel = NSManagedObjectModel.init(contentsOf: modelURL)
             else {
                 fatalError("CoreDataManager - COULD NOT INIT MANAGED OBJECT MODEL")
