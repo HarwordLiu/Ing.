@@ -13,7 +13,7 @@
         <attribute name="recordID" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="recordName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="taskName" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="taskType" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TaskType" inverseName="task" inverseEntity="TaskType" syncable="YES"/>
+        <relationship name="taskType" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TaskType" inverseName="tasks" inverseEntity="TaskType" syncable="YES"/>
     </entity>
     <entity name="TaskType" representedClassName="TaskType" syncable="YES" codeGenerationType="class">
         <attribute name="addDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
@@ -23,11 +23,11 @@
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="recordID" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="recordName" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="task" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Task" inverseName="taskType" inverseEntity="Task" syncable="YES"/>
+        <relationship name="tasks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Task" inverseName="taskType" inverseEntity="Task" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Task" positionX="205" positionY="-24" width="128" height="180"/>
-        <element name="TaskType" positionX="-90" positionY="-9" width="128" height="165"/>
         <element name="DeletedCloudKitObject" positionX="-234" positionY="-120" width="128" height="75"/>
+        <element name="Task" positionX="205" positionY="-24" width="128" height="180"/>
+        <element name="TaskType" positionX="-90" positionY="-9" width="128" height="163"/>
     </elements>
 </model>
