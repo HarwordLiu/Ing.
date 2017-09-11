@@ -26,6 +26,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             self.cloudKitManager = self.coreDataManager?.cloudKitManager
         }
         
+        let notificationOptions = UIUserNotificationSettings(types: [.alert], categories: nil)
+        application.registerUserNotificationSettings(notificationOptions)
+        
+        application.registerForRemoteNotifications()
         
     
         return true
@@ -66,6 +70,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        self.saveContext()
     }
     
+    // MARK: remote notifications
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        print("application.didReceiveRemoteNotification")
+        
+        if let stringObjectUserInfo = userInfo as? [String : NSObject] {
+            let cloudKitZoneNotificationUserInfo = CKRecordZoneNotification(fromRemoteNotificationDictionary: stringObjectUserInfo)
+            
+            if let recordZoneID = cloudKitZoneNotificationUserInfo.recordZoneID {
+                
+                let completionBlockOperation = BlockOperation {
+                    completionHandler(UIBackgroundFetchResult.newData)
+                }
+                
+                cloudKitManager?.syncZone(recordZoneID.zoneName, completionBlockOperation: completionBlockOperation)
+            }
+        }
+        else {
+            completionHandler(UIBackgroundFetchResult.noData)
+        }
+    }
 
 
 
